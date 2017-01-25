@@ -36,7 +36,9 @@ import fr.coppernic.framework.art.BuildConfig;
  * Robolectric tests are done in a single thread !
  */
 @RunWith(CustomRobolectricRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21)
+//@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class,
+        sdk = 21)
 public abstract class RobolectricTest {
 
 	@BeforeClass

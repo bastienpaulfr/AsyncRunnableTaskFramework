@@ -48,23 +48,50 @@ public class CustomRobolectricRunner extends RobolectricGradleTestRunner {
 		if (androidManifestFile.exists()) {
 			return appManifest;
 		} else {
-			String moduleRoot = getModuleRootPath(config);
-			androidManifestFile = FileFsFile.from(moduleRoot,
-			                                      appManifest.getAndroidManifestFile().getPath()
-				                                      .replace("full", "aapt"));
-			FsFile resDirectory = FileFsFile.from(moduleRoot,
-			                                      appManifest.getAndroidManifestFile().getPath()
-				                                      .replace("AndroidManifest.xml", "res"));
-			FsFile assetsDirectory = FileFsFile.from(moduleRoot,
-			                                         appManifest.getAndroidManifestFile().getPath()
-				                                         .replace("AndroidManifest.xml", "assets"));
-			return new AndroidManifest(androidManifestFile, resDirectory, assetsDirectory);
+			AndroidManifest m = getAppManifest1(config, appManifest);
+			if(m.getAndroidManifestFile().exists()){
+				return m;
+			} else {
+				return getAppManifest2(config, appManifest);
+			}
 		}
 	}
+
+	AndroidManifest getAppManifest1(Config config, AndroidManifest appManifest){
+		String moduleRoot = getModuleRootPath(config);
+		FsFile androidManifestFile = FileFsFile.from(moduleRoot,
+		                                      appManifest.getAndroidManifestFile().getPath());
+		FsFile resDirectory = FileFsFile.from(moduleRoot,
+		                                      appManifest.getAndroidManifestFile().getPath()
+			                                      .replace("AndroidManifest.xml", "res"));
+		FsFile assetsDirectory = FileFsFile.from(moduleRoot,
+		                                         appManifest.getAndroidManifestFile().getPath()
+			                                         .replace("AndroidManifest.xml", "assets"));
+		return new AndroidManifest(androidManifestFile, resDirectory, assetsDirectory);
+	}
+
+	AndroidManifest getAppManifest2(Config config, AndroidManifest appManifest){
+		String moduleRoot = getModuleRootPath(config);
+		FsFile androidManifestFile = FileFsFile.from(moduleRoot,
+		                                             appManifest.getAndroidManifestFile().getPath()
+			                                             .replace("full", "aapt"));
+		System.out.println("androidManifestFile : " + androidManifestFile.getPath() + ", exist : " +
+		                   androidManifestFile.exists());
+		FsFile resDirectory = FileFsFile.from(moduleRoot,
+		                                      appManifest.getAndroidManifestFile().getPath()
+			                                      .replace("AndroidManifest.xml", "res"));
+		FsFile assetsDirectory = FileFsFile.from(moduleRoot,
+		                                         appManifest.getAndroidManifestFile().getPath()
+			                                         .replace("AndroidManifest.xml", "assets"));
+		return new AndroidManifest(androidManifestFile, resDirectory, assetsDirectory);
+	}
+
 
 	private String getModuleRootPath(Config config) {
 		String moduleRoot =
 			config.constants().getResource("").toString().replace("file:", "").replace("jar:", "");
-		return moduleRoot.substring(0, moduleRoot.indexOf("/build"));
+		// last index of because travis has "build" in path
+		return moduleRoot.substring(0, moduleRoot.lastIndexOf("/build"));
 	}
+
 }

@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2017.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package fr.coppernic.framework.art;
 
 import android.os.Handler;
@@ -15,6 +37,8 @@ import fr.coppernic.framework.art.AsyncRunnable.State;
 
 /**
  * Executor service
+ *
+ * @author Bastien Paul
  */
 public class AsyncExecutorService<V, T extends AsyncRunnable<V>>
 	implements AsyncExecutor<V, T>, Handler.Callback {
@@ -231,7 +255,7 @@ public class AsyncExecutorService<V, T extends AsyncRunnable<V>>
 	 */
 	@Override
 	public synchronized void dispose() {
-		if(mState.get() == State.CANCELLED){
+		if (mState.get() == State.CANCELLED) {
 			//Already cancelled;
 			return;
 		}
@@ -284,7 +308,7 @@ public class AsyncExecutorService<V, T extends AsyncRunnable<V>>
 		if (previous.equals(State.RUNNING)) {
 			// RUNNING : the current task is running. It will call onDone or onCancel soon !
 			// We have to wait for the task to finish.
-			Log.i(TAG,"Cancel : waiting for task to finish...");
+			Log.i(TAG, "Cancel : waiting for task to finish...");
 		} else {
 			// IDLE : task is not executed yet, but we are killing the looper before.
 			// DONE : task is done, nothing to do

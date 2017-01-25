@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2017.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package fr.coppernic.framework.art;
 
 import android.os.Handler;
@@ -12,18 +34,20 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Base implementation of an Async task
+ *
+ * @author Bastien Paul
  */
 public abstract class AsyncRunnableTask<V> implements AsyncRunnable<V>, Handler.Callback {
 
 	private static final String TAG = "AsyncRunnableTask";
 	private static final boolean DEBUG = false;
 	private final Object mutex = new Object();
+	private final AtomicReference<State> mState = new AtomicReference<>(State.IDLE);
 	private Handler handler = null;
 	private AsyncRunnableListener<V> listener = null;
 	private boolean firstExecution = true;
 	private Timer timer = null;
 	private Timeout<V> timeoutTask = null;
-	private final AtomicReference<State> mState = new AtomicReference<>(State.IDLE);
 
 	/* ********** AsyncRunnable ********** */
 
@@ -39,7 +63,7 @@ public abstract class AsyncRunnableTask<V> implements AsyncRunnable<V>, Handler.
 		} else if (mState.get() != State.DONE) {
 			after();
 			checkState(new State[]{State.RUNNING, State.PENDING}, State.DONE);
-			if(isHandlerAlive()) {
+			if (isHandlerAlive()) {
 				handler.post(new Runnable() {
 					@Override
 					public void run() {
@@ -55,7 +79,7 @@ public abstract class AsyncRunnableTask<V> implements AsyncRunnable<V>, Handler.
 		if (mState.get() != State.DONE) {
 			after();
 			checkState(new State[]{State.RUNNING, State.PENDING, State.CANCELLED}, State.DONE);
-			if(isHandlerAlive()) {
+			if (isHandlerAlive()) {
 				handler.post(new Runnable() {
 					@Override
 					public void run() {
@@ -232,7 +256,7 @@ public abstract class AsyncRunnableTask<V> implements AsyncRunnable<V>, Handler.
 		}
 	}
 
-	private boolean isHandlerAlive(){
+	private boolean isHandlerAlive() {
 		return handler.getLooper().getThread().isAlive();
 	}
 

@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2017.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package fr.coppernic.framework.art;
 
 import android.os.HandlerThread;
@@ -24,7 +46,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * Created by bastien on 16/06/16.
+ * Created on 16/06/16
+ *
+ * @author Bastien Paul
  */
 public class AsyncExecutorServiceTest extends RobolectricTest {
 
@@ -72,7 +96,7 @@ public class AsyncExecutorServiceTest extends RobolectricTest {
 	public void executorIsDisposed() {
 		service.dispose();
 		service.add(mock);
-		assertThat(service.execute(),is(RetCode.WRONG_STATE));
+		assertThat(service.execute(), is(RetCode.WRONG_STATE));
 	}
 
 	@Test
@@ -93,7 +117,7 @@ public class AsyncExecutorServiceTest extends RobolectricTest {
 		service.execute();
 		runLooper();
 		RetCode ret = service.executeCurrent();
-		assertThat(ret,is(RetCode.OK));
+		assertThat(ret, is(RetCode.OK));
 		runLooper();
 		verify(spyTwice, times(1)).onDone(RESULT.OK);
 	}
@@ -121,12 +145,12 @@ public class AsyncExecutorServiceTest extends RobolectricTest {
 
 		private RESULT expected = RESULT.OK;
 
-		void setExpected(RESULT expected) {
-			this.expected = expected;
-		}
-
 		TestExecutor(HandlerThread handlerThread) {
 			super(handlerThread);
+		}
+
+		void setExpected(RESULT expected) {
+			this.expected = expected;
 		}
 
 		@Override
